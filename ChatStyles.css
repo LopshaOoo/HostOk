@@ -1,3 +1,7 @@
 body {
   text-align: center;
 }
+#username {
+  border: 2px solid #111;
+  border-radius: 8px;
+}
