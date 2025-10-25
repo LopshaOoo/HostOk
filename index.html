@@ -1,361 +1,160 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 MyPass - Менеджер паролей</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="My App" />
+    <meta name="theme-color" content="#4a5568" />
+    <title>FullScreen App</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100vh;
+        height: -webkit-fill-available;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+          env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
 
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
+      .app-container {
+        height: 100vh;
+        height: -webkit-fill-available;
+        display: flex;
+        flex-direction: column;
+        color: white;
+      }
 
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            padding: 20px 0;
-        }
+      .header {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+      }
 
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+      }
 
-        .header p {
-            opacity: 0.9;
-            font-size: 16px;
-        }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
 
-        /* Стили для экрана блокировки */
-        .lock-screen {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: center;
-        }
+      p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+      }
 
-        .lock-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
+      .button {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-size: 1rem;
+        backdrop-filter: blur(10px);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
 
-        .password-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+      .button:active {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0.95);
+      }
 
-        .unlock-btn {
-            width: 100%;
-            padding: 15px;
-            background: #007AFF;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+      .footer {
+        padding: 20px;
+        text-align: center;
+        font-size: 0.9rem;
+        opacity: 0.7;
+      }
 
-        .unlock-btn:hover {
-            background: #0056CC;
-        }
-
-        /* Стили для главного экрана */
-        .main-screen {
-            display: none;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .search-bar {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e1e1e1;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .passwords-list {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .password-item {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .password-item:hover {
-            background: #f8f9fa;
-        }
-
-        .password-item:last-child {
-            border-bottom: none;
-        }
-
-        .service-name {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .username {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .share-btn, .copy-btn {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .share-btn {
-            background: #007AFF;
-            color: white;
-        }
-
-        .copy-btn {
-            background: #34C759;
-            color: white;
-        }
-
-        /* Уведомление */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            display: none;
-            z-index: 1000;
-        }
-
-        /* Добавление нового пароля */
-        .add-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: #007AFF;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,122,255,0.3);
-        }
+      /* Запрет масштабирования */
+      input,
+      textarea {
+        -webkit-user-select: text;
+        user-select: text;
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Заголовок -->
-        <div class="header">
-            <h1>🔐 MyPass</h1>
-            <p>Ваш безопасный менеджер паролей</p>
-        </div>
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="header">
+        <h1>🚀 Моё Приложение</h1>
+      </div>
 
-        <!-- Экран блокировки -->
-        <div class="lock-screen" id="lockScreen">
-            <div class="lock-icon">🔒</div>
-            <h2>Введите мастер-пароль</h2>
-            <input type="password" class="password-input" id="masterPassword" placeholder="Введите пароль">
-            <button class="unlock-btn" onclick="unlock()">Разблокировать</button>
-        </div>
+      <div class="content">
+        <p>Это полноэкранное приложение</p>
+        <p>Добавь на домашний экран для лучшего опыта!</p>
+        <button class="button">Нажми меня</button>
+      </div>
 
-        <!-- Главный экран -->
-        <div class="main-screen" id="mainScreen">
-            <!-- Поиск -->
-            <div class="search-bar">
-                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Поиск паролей...">
-            </div>
-
-            <!-- Список паролей -->
-            <div class="passwords-list" id="passwordsList">
-                <!-- Пароли будут добавляться через JavaScript -->
-            </div>
-        </div>
+      <div class="footer">Работает в полноэкранном режиме</div>
     </div>
 
-    <!-- Кнопка добавления -->
-    <button class="add-btn" id="addBtn" style="display: none;" onclick="showAddForm()">+</button>
-
-    <!-- Уведомление -->
-    <div class="notification" id="notification"></div>
-
     <script>
-        // Пример данных (в реальном приложении они будут шифроваться)
-        let passwords = [
-            { id: 1, service: "📱 Instagram", username: "my_username", password: "insta_pass123" },
-            { id: 2, service: "📧 Gmail", username: "myemail@gmail.com", password: "gmail_pass456" },
-            { id: 3, service: "🐦 Twitter", username: "mytwitter", password: "twitter_pass789" },
-            { id: 4, service: "💳 Facebook", username: "myfacebook", password: "fb_pass000" },
-            { id: 5, service: "📺 Netflix", username: "mynetflix@mail.com", password: "netflix_pass111" }
-        ];
+      // Запрет масштабирования жестами
+      document.addEventListener("gesturestart", function (e) {
+        e.preventDefault();
+      });
 
-        // Разблокировка приложения
-        function unlock() {
-            const masterPassword = document.getElementById('masterPassword').value;
-            
-            if (masterPassword) {
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('mainScreen').style.display = 'block';
-                document.getElementById('addBtn').style.display = 'block';
-                
-                loadPasswords();
-                showNotification('🔓 Приложение разблокировано');
-            } else {
-                alert('Введите мастер-пароль');
-            }
-        }
+      document.addEventListener("gesturechange", function (e) {
+        e.preventDefault();
+      });
 
-        // Загрузка паролей в список
-        function loadPasswords() {
-            const list = document.getElementById('passwordsList');
-            list.innerHTML = '';
+      document.addEventListener("gestureend", function (e) {
+        e.preventDefault();
+      });
 
-            passwords.forEach(item => {
-                const passwordItem = document.createElement('div');
-                passwordItem.className = 'password-item';
-                passwordItem.innerHTML = `
-                    <div class="service-name">${item.service}</div>
-                    <div class="username">${item.username}</div>
-                    <div class="actions">
-                        <button class="share-btn" onclick="sharePassword('${item.service}', '${item.username}', '${item.password}')">
-                            📤 Поделиться
-                        </button>
-                        <button class="copy-btn" onclick="copyPassword('${item.service}', '${item.username}', '${item.password}')">
-                            📋 Копировать
-                        </button>
-                    </div>
-                `;
-                list.appendChild(passwordItem);
-            });
-        }
+      // Запрет двойного тапа
+      let lastTouchEnd = 0;
+      document.addEventListener(
+        "touchend",
+        function (event) {
+          const now = new Date().getTime();
+          if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+          }
+          lastTouchEnd = now;
+        },
+        false
+      );
 
-        // Функция Share Sheet
-        async function sharePassword(service, username, password) {
-            const shareData = {
-                title: `Пароль для ${service}`,
-                text: `🔐 ${service}\n👤 Логин: ${username}\n🔑 Пароль: ${password}`
-            };
-            
-            try {
-                if (navigator.share) {
-                    await navigator.share(shareData);
-                } else {
-                    await copyToClipboard(shareData.text);
-                    showNotification('📋 Данные скопированы в буфер!');
-                }
-            } catch (error) {
-                if (error.name !== 'AbortError') {
-                    await copyToClipboard(shareData.text);
-                    showNotification('📋 Данные скопированы в буфер!');
-                }
-            }
-        }
+      // Обработчик кнопки
+      document.querySelector(".button").addEventListener("click", function () {
+        alert("Приложение работает! 📱");
+      });
 
-        // Функция копирования
-        async function copyPassword(service, username, password) {
-            const text = `🔐 ${service}\n👤 Логин: ${username}\n🔑 Пароль: ${password}`;
-            
-            try {
-                await copyToClipboard(text);
-                showNotification('✅ Пароль скопирован!\nПерейдите в приложение и вставьте его.');
-            } catch (error) {
-                showNotification('❌ Ошибка при копировании');
-            }
-        }
-
-        // Универсальное копирование в буфер
-        async function copyToClipboard(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                await navigator.clipboard.writeText(text);
-            } else {
-                // Fallback для старых браузеров
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-            }
-        }
-
-        // Показать уведомление
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        // Поиск паролей
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const items = document.querySelectorAll('.password-item');
-            
-            items.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-
-        // Функция добавления нового пароля (заглушка)
-        function showAddForm() {
-            alert('Форма добавления нового пароля\n(здесь можно реализовать модальное окно)');
-        }
-
-        // Автофокус на поле пароля при загрузке
-        document.getElementById('masterPassword').focus();
+      // Определение iOS
+      if (navigator.standalone) {
+        console.log("Запущено в полноэкранном режиме");
+      }
     </script>
-</body>
+  </body>
 </html>
