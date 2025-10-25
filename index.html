@@ -11,9 +11,9 @@
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    <meta name="apple-mobile-web-app-title" content="My App" />
-    <meta name="theme-color" content="#4a5568" />
-    <title>FullScreen App</title>
+    <meta name="apple-mobile-web-app-title" content="FullScreen" />
+    <meta name="theme-color" content="#000000" />
+    <title>FullScreen</title>
     <style>
       * {
         margin: 0;
@@ -26,100 +26,32 @@
       }
 
       body {
-        background: black;
+        background: #000000;
         height: 100vh;
         height: -webkit-fill-available;
         overflow: hidden;
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         padding: env(safe-area-inset-top) env(safe-area-inset-right)
           env(safe-area-inset-bottom) env(safe-area-inset-left);
-      }
-
-      .app-container {
-        height: 100vh;
-        height: -webkit-fill-available;
-        display: flex;
-        flex-direction: column;
-        color: white;
-      }
-
-      .header {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 20px;
-        text-align: center;
-        backdrop-filter: blur(10px);
-      }
-
-      .content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        text-align: center;
-      }
-
-      h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
-      }
-
-      p {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        margin-bottom: 30px;
-      }
-
-      .button {
-        background: rgba(255, 255, 255, 0.2);
-        border: 2px solid white;
-        color: white;
-        padding: 15px 30px;
-        border-radius: 25px;
-        font-size: 1rem;
-        backdrop-filter: blur(10px);
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .button:active {
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(0.95);
-      }
-
-      .footer {
-        padding: 20px;
-        text-align: center;
-        font-size: 0.9rem;
-        opacity: 0.7;
-      }
-
-      /* Запрет масштабирования */
-      input,
-      textarea {
-        -webkit-user-select: text;
-        user-select: text;
       }
     </style>
   </head>
   <body>
-    <div class="app-container">
-      <div class="header">
-        <h1>🚀 Моё Приложение</h1>
-      </div>
-
-      <div class="content">
-        <p>Это полноэкранное приложение</p>
-        <p>Добавь на домашний экран для лучшего опыта!</p>
-        <button class="button">Нажми меня</button>
-      </div>
-
-      <div class="footer">Работает в полноэкранном режиме</div>
-    </div>
-
+    <p
+      style="
+        color: aliceblue;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 30px;
+        left: 50%;
+        transform: translate(-50%,50%);
+        width: 100%;
+      "
+    >
+      Работает в полноэкранном режиме
+    </p>
     <script>
-      // Запрет масштабирования жестами
       document.addEventListener("gesturestart", function (e) {
         e.preventDefault();
       });
@@ -132,7 +64,6 @@
         e.preventDefault();
       });
 
-      // Запрет двойного тапа
       let lastTouchEnd = 0;
       document.addEventListener(
         "touchend",
@@ -145,16 +76,6 @@
         },
         false
       );
-
-      // Обработчик кнопки
-      document.querySelector(".button").addEventListener("click", function () {
-        alert("Приложение работает! 📱");
-      });
-
-      // Определение iOS
-      if (navigator.standalone) {
-        console.log("Запущено в полноэкранном режиме");
-      }
     </script>
   </body>
 </html>
